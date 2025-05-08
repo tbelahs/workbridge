@@ -29,7 +29,7 @@ export default function Page() {
             <section>
                 <ContextAlert className="mb-6" />
                 <h1 className="mb-4 text-3xl font-bold">WorkBridge</h1>
-                <p className="mb-6 text-lg italic">Conectando os talentos do futuro às empresas que transformam o presente.</p>
+<p className="mb-6 text-lg italic">Conectando os talentos do futuro às empresas que transformam o presente.</p>
 
                 <form className="mb-8 bg-white p-6 rounded shadow-md max-w-md">
                     <h2 className="text-xl font-semibold mb-4">Login para candidatura</h2>
