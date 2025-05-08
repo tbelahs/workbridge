@@ -1,8 +1,10 @@
+"use client"; // Torna este componente um componente do lado do cliente
+
+import { useState } from 'react';
 import Link from 'next/link';
-import { useclient } from 'react';
 
 export default function Page() {
-  const [formData, setFormData] = useclient({
+  const [formData, setFormData] = useState({
     nome: '',
     email: '',
     telefone: '',
@@ -77,4 +79,3 @@ export default function Page() {
     </div>
   );
 }
-
