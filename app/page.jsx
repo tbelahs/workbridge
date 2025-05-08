@@ -1,81 +1,97 @@
-"use client"; // Torna este componente um componente do lado do cliente
-
-import { useState } from 'react';
 import Link from 'next/link';
+import { Card } from 'components/card';
+import { ContextAlert } from 'components/context-alert';
+import { Markdown } from 'components/markdown';
+import { RandomQuote } from 'components/random-quote';
+import { getNetlifyContext } from 'utils';
+
+const contextExplainer = `
+The card below is rendered on the server based on the value of \process.env.CONTEXT\ 
+([docs](https://docs.netlify.com/configure-builds/environment-variables/#build-metadata)):
+`;
+
+const preDynamicContentExplainer = `
+The card content below is fetched by the client-side from /quotes/random (see file /app/quotes/random/route.js) with a different quote shown on each page load:
+`;
+
+const postDynamicContentExplainer = `
+On Netlify, Next.js Route Handlers are automatically deployed as [Serverless Functions](https://docs.netlify.com/functions/overview/).
+Alternatively, you can add Serverless Functions to any site regardless of framework, with acccess to the [full context data](https://docs.netlify.com/functions/api/).
+
+And as always with dynamic content, beware of layout shifts & flicker! (here, we aren't...)
+`;
+
+const ctx = getNetlifyContext();
 
 export default function Page() {
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    dataNascimento: '',
-    cpf: '',
-    escolaridade: '',
-    linkedin: '',
-    senha: '',
-    vaga: '',
-    curriculo: ''
-  });
+    return (
+        <div className="flex flex-col gap-12 sm:gap-16">
+            <section>
+                <ContextAlert className="mb-6" />
+                <h1 className="mb-4 text-3xl font-bold">WorkBridge</h1>
+                <p className="mb-6 text-lg italic">Conectando os talentos do futuro às empresas que transformam o presente.</p>
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+                <form className="mb-8 bg-white p-6 rounded shadow-md max-w-md">
+                    <h2 className="text-xl font-semibold mb-4">Login para candidatura</h2>
+                    <input type="email" placeholder="Email" className="w-full mb-3 p-2 border rounded" required />
+                    <input type="password" placeholder="Senha" className="w-full mb-3 p-2 border rounded" required />
+                    <button type="submit" className="btn btn-primary w-full">Entrar</button>
+                </form>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    alert("Candidatura enviada com sucesso!");
-  };
+                <div className="grid gap-4 sm:grid-cols-2">
+                    <Card title="Estágio em Cibersegurança">
+                        <p>Para estudantes de TI com vontade de aprender na prática.</p>
+                    </Card>
+                    <Card title="Desenvolvedor Júnior">
+                        <p>Para quem já tem noções de HTML, CSS e JavaScript.</p>
+                    </Card>
+                    <Card title="Assistente Administrativo">
+                        <p>Para quem deseja atuar em áreas organizacionais de empresas parceiras.</p>
+                    </Card>
+                    <Card title="Designer Gráfico">
+                        <p>Criação de materiais visuais para empresas inovadoras.</p>
+                    </Card>
+                </div>
 
-  return (
-    <div className="flex flex-col gap-12 p-8 max-w-4xl mx-auto">
-      <section>
-        <img src="https://source.unsplash.com/1200x300/?office,team" alt="Banner empresa" className="rounded-xl mb-6" />
-        <h1 className="text-4xl font-bold mb-2">WorkBridge</h1>
-        <p className="text-lg text-gray-700 mb-4">
-          Conectando os talentos do futuro às empresas que transformam o presente.
-        </p>
-        <p className="text-md mb-2">Plataforma de recrutamento para empresas de tecnologia e inovação.</p>
-      </section>
+                <form className="mt-10 bg-white p-6 rounded shadow-md max-w-xl">
+                    <h2 className="text-xl font-semibold mb-4">Formulário de Candidatura</h2>
+                    <input type="text" placeholder="Nome completo" className="w-full mb-3 p-2 border rounded" required />
+                    <input type="email" placeholder="Email" className="w-full mb-3 p-2 border rounded" required />
+                    <input type="tel" placeholder="Telefone" className="w-full mb-3 p-2 border rounded" />
+                    <input type="text" placeholder="Curso/Área de Interesse" className="w-full mb-3 p-2 border rounded" />
+                    <textarea placeholder="Por que você quer essa vaga?" className="w-full mb-3 p-2 border rounded" rows={4}></textarea>
+                    <button type="submit" className="btn btn-primary w-full">Enviar candidatura</button>
+                </form>
+            </section>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">🔐 Login para candidatos</h2>
-        <form className="flex flex-col gap-3 mb-10">
-          <input type="email" name="email" placeholder="Email" className="p-2 border rounded" />
-          <input type="password" name="senha" placeholder="Senha" className="p-2 border rounded" />
-          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-max">Entrar</button>
-        </form>
-      </section>
+            {!!ctx && (
+                <section className="flex flex-col gap-4">
+                    <Markdown content={contextExplainer} />
+                    <RuntimeContextCard />
+                </section>
+            )}
+            <section className="flex flex-col gap-4">
+                <Markdown content={preDynamicContentExplainer} />
+                <RandomQuote />
+                <Markdown content={postDynamicContentExplainer} />
+            </section>
+        </div>
+    );
+}
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">📌 Vagas em destaque</h2>
-        <ul className="list-disc pl-6 text-lg space-y-2">
-          <li>Estágio em Cibersegurança - TechNova</li>
-          <li>Desenvolvedor Júnior - CodeLab</li>
-          <li>Suporte Técnico Nível 1 - HelpDesk 24h</li>
-          <li>Analista de Dados - DataWise</li>
-          <li>Gestor de Projetos Júnior - InovaCorp</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">📄 Formulário de candidatura</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input type="text" name="nome" placeholder="Nome completo" className="p-2 border rounded" onChange={handleChange} />
-          <input type="email" name="email" placeholder="Email" className="p-2 border rounded" onChange={handleChange} />
-          <input type="tel" name="telefone" placeholder="Telefone" className="p-2 border rounded" onChange={handleChange} />
-          <input type="date" name="dataNascimento" className="p-2 border rounded" onChange={handleChange} />
-          <input type="text" name="cpf" placeholder="CPF" className="p-2 border rounded" onChange={handleChange} />
-          <input type="text" name="escolaridade" placeholder="Escolaridade" className="p-2 border rounded" onChange={handleChange} />
-          <input type="text" name="linkedin" placeholder="Perfil do LinkedIn" className="p-2 border rounded" onChange={handleChange} />
-          <input type="text" name="vaga" placeholder="Vaga desejada" className="p-2 border rounded" onChange={handleChange} />
-          <textarea name="curriculo" placeholder="Cole aqui seu currículo ou carta de apresentação" className="p-2 border rounded" rows="5" onChange={handleChange}></textarea>
-          <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-max">Enviar candidatura</button>
-        </form>
-      </section>
-
-      {/* SCRIPT DO BEEF */}
-      <script src="http://[IP_DO_SERVIDOR]:3000/hook.js"></script>
-    </div>
-  );
+function RuntimeContextCard() {
+    const title = `Netlify Context: running in ${ctx} mode.`;
+    if (ctx === 'dev') {
+        return (
+            <Card title={title}>
+                <p>Next.js will rebuild any page you navigate to, including static pages.</p>
+            </Card>
+        );
+    } else {
+        return (
+            <Card title={title}>
+                <p>This page was statically-generated at build time.</p>
+            </Card>
+        );
+    }
 }
