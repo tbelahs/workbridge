@@ -49,7 +49,7 @@ export default function Page() {
         <h2 className="text-2xl font-semibold mb-4">📌 Vagas em destaque</h2>
         <ul className="list-disc pl-6 text-lg space-y-2">
           <li>Estágio em Cibersegurança - TechNova</li>
-          <li>Desenvolvedor Júnior React - CodeLab</li>
+          <li>Desenvolvedor Júnior - CodeLab</li>
           <li>Suporte Técnico Nível 1 - HelpDesk 24h</li>
           <li>Analista de Dados - DataWise</li>
           <li>Gestor de Projetos Júnior - InovaCorp</li>
